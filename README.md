@@ -1,16 +1,105 @@
-## Hi there 👋
+```rust
+use std::fmt;
 
-<!--
-**dijith-481/dijith-481** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+fn main() {
+    let mut dijith = Dev::default()
+        .with_about("Computer engineering student interested in system design")
+        .with_skill(Skill::Language("Rust"))
+        .with_skill(Skill::Framework("Axum"))
+        .with_skill(Skill::Language("TypeScript"))
+        .with_skill(Skill::Language("Lua"))
+        .with_skill(Skill::Framework("Next.js"))
+        .with_skill(Skill::Framework("Angular"))
+        .with_skill(Skill::Paradigm("Functional"))
+        .with_interest_in(&["system design", "operating systems", "networking"]);
 
-Here are some ideas to get you started:
+    dijith.push_project("rusty-vim", "Modal text editor built from scratch.");
+    dijith.push_project("markweavia", "Markdown Slides creator");
+    dijith.push_project(
+        "project-mosaic",
+        "Collaborative pixel canvas with a Rust/Axum backend.",
+    );
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+    dijith.render();
+}
+
+struct Dev {
+    handle: &'static str,
+    tagline: String,
+    skills: Vec<Skill>,
+    projects: Vec<(&'static str, &'static str)>,
+    interests: Vec<&'static str>,
+    matrix_id: &'static str,
+}
+
+impl Default for Dev {
+    fn default() -> Self {
+        Self {
+            handle: "dijith-481",
+            tagline: String::new(),
+            skills: Vec::from([Skill::Tool("Neovim"), Skill::Tool("Arch Btw")]),
+            projects: Vec::new(),
+            interests: Vec::new(),
+            matrix_id: "@dijith:matrix.org",
+        }
+    }
+}
+
+impl Dev {
+    fn push_project(&mut self, name: &'static str, description: &'static str) {
+        self.projects.push((name, description));
+    }
+
+    fn with_skill(mut self, skill: Skill) -> Self {
+        self.skills.push(skill);
+        self
+    }
+    fn with_about(mut self, about: &'static str) -> Self {
+        self.tagline = about.to_string();
+        self
+    }
+
+    fn with_interest_in(mut self, interests: &'static [&'static str]) -> Self {
+        self.interests.extend(interests);
+        self
+    }
+
+    fn render(&self) {
+        println!("\n\n[DEV] {} :: {}", self.handle, self.tagline);
+        println!(
+            "\n[CORE] {}",
+            self.skills
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join(" | ")
+        );
+        println!("\ninterested_in:: {}", self.interests.join(", "));
+        println!("\n[ARTIFACTS]");
+        self.projects.iter().for_each(|&(name, desc)| {
+            println!("- {}: {}", name, desc);
+            println!("  └─ https://github.com/{}/{}", self.handle, name);
+        });
+        println!("\n[MATRIX] - matrix:: {}", self.matrix_id);
+    }
+}
+
+#[derive(Debug)]
+enum Skill {
+    Language(&'static str),
+    Framework(&'static str),
+    Tool(&'static str),
+    Paradigm(&'static str),
+}
+
+impl fmt::Display for Skill {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Language(s) => write!(f, "lang::{}", s),
+            Self::Framework(s) => write!(f, "framework::{}", s),
+            Self::Tool(s) => write!(f, "tool::{}", s),
+            Self::Paradigm(s) => write!(f, "paradigm::{}", s),
+        }
+    }
+}
+```
