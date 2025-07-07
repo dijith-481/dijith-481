@@ -3,7 +3,6 @@ use std::fmt;
 
 fn main() {
     let mut dijith = Dev::default()
-        .with_about("Computer engineering student interested in system design")
         .with_skill(Skill::Language("Rust"))
         .with_skill(Skill::Framework("Axum"))
         .with_skill(Skill::Language("TypeScript"))
@@ -13,19 +12,18 @@ fn main() {
         .with_skill(Skill::Paradigm("Functional"))
         .with_interest_in(&["system design", "operating systems", "networking"]);
 
+    dijith.about = "Computer engineering student interested in system design".to_string();
+
     dijith.push_project("rusty-vim", "Modal text editor built from scratch.");
     dijith.push_project("markweavia", "Markdown Slides creator");
-    dijith.push_project(
-        "project-mosaic",
-        "Collaborative pixel canvas with a Rust/Axum backend.",
-    );
+    dijith.push_project("project-mosaic","Collaborative pixel canvas with a Rust/Axum backend.",);
 
     dijith.render();
 }
 
 struct Dev {
     handle: &'static str,
-    tagline: String,
+    about: String,
     skills: Vec<Skill>,
     projects: Vec<(&'static str, &'static str)>,
     interests: Vec<&'static str>,
@@ -36,7 +34,7 @@ impl Default for Dev {
     fn default() -> Self {
         Self {
             handle: "dijith-481",
-            tagline: String::new(),
+            about: String::new(),
             skills: Vec::from([Skill::Tool("Neovim"), Skill::Tool("Arch Btw")]),
             projects: Vec::new(),
             interests: Vec::new(),
@@ -54,10 +52,6 @@ impl Dev {
         self.skills.push(skill);
         self
     }
-    fn with_about(mut self, about: &'static str) -> Self {
-        self.tagline = about.to_string();
-        self
-    }
 
     fn with_interest_in(mut self, interests: &'static [&'static str]) -> Self {
         self.interests.extend(interests);
@@ -65,7 +59,7 @@ impl Dev {
     }
 
     fn render(&self) {
-        println!("\n\n[DEV] {} :: {}", self.handle, self.tagline);
+        println!("\n\n[DEV] {} :: {}", self.handle, self.about);
         println!(
             "\n[CORE] {}",
             self.skills
@@ -102,4 +96,26 @@ impl fmt::Display for Skill {
         }
     }
 }
+```
+
+```bash
+rustc dijith-481.rs
+./dijith-481
+```
+```bash
+[DEV] dijith-481 :: Computer engineering student interested in system design
+
+[CORE] tool::Neovim | tool::Arch Btw | lang::Rust | framework::Axum | lang::TypeScript | lang::Lua | framework::Next.js | framework::Angular | paradigm::Functional
+
+interested_in:: system design, operating systems, networking
+
+[ARTIFACTS]
+- rusty-vim: Modal text editor built from scratch.
+  └─ https://github.com/dijith-481/rusty-vim
+- markweavia: Markdown Slides creator
+  └─ https://github.com/dijith-481/markweavia
+- project-mosaic: Collaborative pixel canvas with a Rust/Axum backend.
+  └─ https://github.com/dijith-481/project-mosaic
+
+[MATRIX] - matrix:: @dijith:matrix.org
 ```
